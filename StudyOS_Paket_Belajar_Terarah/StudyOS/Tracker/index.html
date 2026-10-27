@@ -139,12 +139,14 @@
 
   function syncToCloud(date, rec){
     if(!SHEET_URL)return;
-    fetch(SHEET_URL,{
-      method:'POST',
-      mode:'no-cors',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({id:date, status:JSON.stringify(rec), waktu:new Date().toISOString()})
-    }).catch(e=>console.log('Post error'));
+    const params = new URLSearchParams({
+      action: 'save',
+      id: date,
+      status: JSON.stringify(rec),
+      waktu: new Date().toISOString()
+    });
+    fetch(`${SHEET_URL}?${params.toString()}`)
+      .catch(e => console.log('Sync error'));
   }
 
   function saveRecord(date,rec){data.records[date]=rec;persist();syncToCloud(date,rec);}
